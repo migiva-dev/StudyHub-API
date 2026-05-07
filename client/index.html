@@ -3,14 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <title>StudyHub API Client</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f4f6f8;
+            color: #222;
+        }
+
+        header {
+            background: #1f2937;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 36px;
+        }
+
+        header p {
+            margin-top: 10px;
+            color: #d1d5db;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .actions {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        button {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 22px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #1d4ed8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 22px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        .card h2 {
+            margin-top: 0;
+            color: #1f2937;
+            font-size: 22px;
+        }
+
+        .badge {
+            display: inline-block;
+            background: #e0ecff;
+            color: #1d4ed8;
+            padding: 6px 10px;
+            border-radius: 20px;
+            font-size: 13px;
+            margin-bottom: 12px;
+        }
+
+        .info {
+            margin: 8px 0;
+        }
+
+        .description {
+            margin-top: 14px;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .message {
+            text-align: center;
+            font-size: 18px;
+            color: #4b5563;
+        }
+
+        footer {
+            text-align: center;
+            margin: 40px 0 20px;
+            color: #6b7280;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <h1>StudyHub API Client</h1>
-    <p>Cliente web para consumir los estudios desde la API local.</p>
 
-    <button onclick="cargarEstudios()">Cargar estudios</button>
+    <header>
+        <h1>StudyHub API</h1>
+        <p>Cliente web para consultar estudios desde una API REST local</p>
+    </header>
 
-    <div id="resultado"></div>
+    <main>
+        <section class="actions">
+            <button onclick="cargarEstudios()">Cargar estudios</button>
+        </section>
+
+        <section id="resultado" class="grid">
+            <p class="message">Pulsa el botón para cargar los estudios disponibles.</p>
+        </section>
+    </main>
+
+    <footer>
+        Proyecto desarrollado con PHP, MySQL, JavaScript y XAMPP
+    </footer>
 
     <script>
         function cargarEstudios() {
@@ -21,21 +137,21 @@
                     contenedor.innerHTML = "";
 
                     if (data.status !== "success") {
-                        contenedor.innerHTML = "<p>Error al cargar los estudios.</p>";
+                        contenedor.innerHTML = "<p class='message'>Error al cargar los estudios.</p>";
                         return;
                     }
 
                     data.data.forEach(estudio => {
-                        const card = document.createElement("div");
+                        const card = document.createElement("article");
+                        card.classList.add("card");
 
                         card.innerHTML = `
+                            <span class="badge">${estudio.grado}</span>
                             <h2>${estudio.nombre}</h2>
-                            <p><strong>Familia:</strong> ${estudio.familia}</p>
-                            <p><strong>Grado:</strong> ${estudio.grado}</p>
-                            <p><strong>Duración:</strong> ${estudio.duracion} horas</p>
-                            <p><strong>Modalidad:</strong> ${estudio.modalidad}</p>
-                            <p>${estudio.descripcion}</p>
-                            <hr>
+                            <p class="info"><strong>Familia:</strong> ${estudio.familia}</p>
+                            <p class="info"><strong>Duración:</strong> ${estudio.duracion} horas</p>
+                            <p class="info"><strong>Modalidad:</strong> ${estudio.modalidad}</p>
+                            <p class="description">${estudio.descripcion}</p>
                         `;
 
                         contenedor.appendChild(card);
@@ -43,10 +159,11 @@
                 })
                 .catch(error => {
                     document.getElementById("resultado").innerHTML =
-                        "<p>Error al conectar con la API.</p>";
+                        "<p class='message'>Error al conectar con la API.</p>";
                     console.error(error);
                 });
         }
     </script>
+
 </body>
 </html>
