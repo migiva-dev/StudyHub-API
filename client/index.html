@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>StudyHub API Client</title>
+</head>
+<body>
+    <h1>StudyHub API Client</h1>
+    <p>Cliente web para consumir los estudios desde la API local.</p>
+
+    <button onclick="cargarEstudios()">Cargar estudios</button>
+
+    <div id="resultado"></div>
+
+    <script>
+        function cargarEstudios() {
+            fetch("../api/estudios.php")
+                .then(response => response.json())
+                .then(data => {
+                    const contenedor = document.getElementById("resultado");
+                    contenedor.innerHTML = "";
+
+                    if (data.status !== "success") {
+                        contenedor.innerHTML = "<p>Error al cargar los estudios.</p>";
+                        return;
+                    }
+
+                    data.data.forEach(estudio => {
+                        const card = document.createElement("div");
+
+                        card.innerHTML = `
+                            <h2>${estudio.nombre}</h2>
+                            <p><strong>Familia:</strong> ${estudio.familia}</p>
+                            <p><strong>Grado:</strong> ${estudio.grado}</p>
+                            <p><strong>Duración:</strong> ${estudio.duracion} horas</p>
+                            <p><strong>Modalidad:</strong> ${estudio.modalidad}</p>
+                            <p>${estudio.descripcion}</p>
+                            <hr>
+                        `;
+
+                        contenedor.appendChild(card);
+                    });
+                })
+                .catch(error => {
+                    document.getElementById("resultado").innerHTML =
+                        "<p>Error al conectar con la API.</p>";
+                    console.error(error);
+                });
+        }
+    </script>
+</body>
+</html>
